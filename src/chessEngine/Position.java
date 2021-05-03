@@ -30,6 +30,12 @@ public class Position {
         this.col += col;
     }
 
+    public Position getPositionReletive(int row, int col){
+        Position pos = this.clone();
+        pos.updatePositionRelative(row, col);
+        return pos;
+    }
+
     public boolean isValidPosition(){
         if(
             (this.row > 0) && (this.row < 8) &&

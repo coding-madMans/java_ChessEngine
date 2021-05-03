@@ -1,14 +1,16 @@
 package chessEngine;
 
-public class ChessPiece implements ChesePieceLogic {
+import java.util.List;
+
+public abstract class ChessPiece{
     private int id;
-    private String pieceName;
+    private String pieceType;
     private char pieceColor;
     private Position piecePosition;
 
-    public ChessPiece(int id, String pieceName, char pieceColor, Position piecePosition){
+    public ChessPiece(int id, String pieceType, char pieceColor, Position piecePosition){
         this.id = id;
-        this.pieceName = pieceName;
+        this.pieceType = pieceType;
         this.pieceColor = pieceColor;
         this.piecePosition = piecePosition;
     }
@@ -17,37 +19,45 @@ public class ChessPiece implements ChesePieceLogic {
         return this.id;
     }
 
-    public String getPieceName(){
-        return this.pieceName;
+    public String getPieceType(){
+        return this.pieceType;
     }
 
     public char getPieceColor(){
         return this.pieceColor;
     }
 
-    public Position getPiecePosition(){
+    protected Position getPiecePosition(){
+        return this.piecePosition;
+    }
+
+    public Position getPosition(){
         return this.piecePosition.clone();
     }
 
-    @Override
+    public ChessPiece[] getAdjecentPieces(ChessBoard board){
+        ChessPiece adjacentPiece[] = new ChessPiece[8];
+        for (int i = 0; i < 8; i++){
+            adjacentPiece[i] = null;
+        }
+        return adjacentPiece;
+    }
+
     public void display() {}
 
-    @Override
     public String repr() {
         String info = "";
         info += "{" + "id : " + this.id;
-        info += ", piece name : " + this.pieceName;
+        info += ", piece type : " + this.pieceType;
         info += ", piece color : " + this.pieceColor;
         info += ", piece Posotion : " + this.piecePosition.repr();
         info += "}";
         return info;
     }
 
-    @Override
-    public int pieceMovementLogic() {
-        return 0;
+    public List<Position> getPossibleMoves(ChessBoard board){
+        return null;
     }
 
-    @Override
-    public void capturePiece(ChessPiece capturedPiece) {}
+    public void capturePiece(ChessBoard board, ChessPiece capturedPiece) {}
 }
