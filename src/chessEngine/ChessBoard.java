@@ -1,87 +1,87 @@
 package chessEngine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ChessBoard {
-    private List<ChessPiece> chessPieces;
-    private char[][] board;
+
+    private HashMap<Integer, ChessPiece> chessPieces;
+    private int kingPos[];
+    private Player player1, player2;
+    private int state;
 
     public ChessBoard(){
-        this.board = new char[8][8];
-        int row, col, i = 0;
-        for (row = 0; row < 8; row++){
-            for (col = 0; col < 8; col++){
-                if(i == 0){
-                    this.board[row][col] = 'W';
-                    i = 1;
-                }else{
-                    this.board[row][col] = 'B';
-                    i = 0;
-                }
-            }
-            i = ((i + 1) % 2);
-        }
-        this.chessPieces = new ArrayList<ChessPiece>();
+        this.chessPieces = new HashMap<Integer, ChessPiece>();
+        this.player1 = new Player("player 1", ChessPiece.COLOR_WHITE);
+        this.player2 = new Player("Player 2", ChessPiece.COLOR_BLACK);
+        this.kingPos = new int[2];
 
-        // placing the chess pieces on the board
-        // white pieces
-        this.chessPieces.add(new Rook(0, 'W', new Position(0, 0)));
-        this.chessPieces.add(new Knight(1, 'W', new Position(0, 1)));
-        this.chessPieces.add(new Bishop(2, 'W', new Position(0, 2)));
-        this.chessPieces.add(new King(3, 'W', new Position(0, 3)));
-        this.chessPieces.add(new Queen(4, 'W', new Position(0, 4)));
-        this.chessPieces.add(new Bishop(5, 'W', new Position(0, 5)));
-        this.chessPieces.add(new Knight(6, 'W', new Position(0, 6)));
-        this.chessPieces.add(new Rook(7, 'W', new Position(0, 7)));
+        // placing the chess pieces
+        // placing the black pieces
+        chessPieces.put(1, new Rook(ChessPiece.COLOR_BLACK, new Position(1)));
+        chessPieces.put(2, new Knight(ChessPiece.COLOR_BLACK, new Position(2)));
+        chessPieces.put(3, new Bishop(ChessPiece.COLOR_BLACK, new Position(3)));
+        chessPieces.put(4, new King(ChessPiece.COLOR_BLACK, new Position(4)));    this.kingPos[1] = 4;
+        chessPieces.put(5, new Queen(ChessPiece.COLOR_BLACK, new Position(5)));
+        chessPieces.put(6, new Bishop(ChessPiece.COLOR_BLACK, new Position(6)));
+        chessPieces.put(7, new Knight(ChessPiece.COLOR_BLACK, new Position(7)));
+        chessPieces.put(8, new Rook(ChessPiece.COLOR_BLACK, new Position(8)));
 
-        this.chessPieces.add(new Pawn(8, 'W', new Position(1, 0)));
-        this.chessPieces.add(new Pawn(9, 'W', new Position(1, 1)));
-        this.chessPieces.add(new Pawn(10, 'W', new Position(1, 2)));
-        this.chessPieces.add(new Pawn(11, 'W', new Position(1, 3)));
-        this.chessPieces.add(new Pawn(12, 'W', new Position(1, 4)));
-        this.chessPieces.add(new Pawn(13, 'W', new Position(1, 5)));
-        this.chessPieces.add(new Pawn(14, 'W', new Position(1, 6)));
-        this.chessPieces.add(new Pawn(15, 'W', new Position(1, 7)));
+        chessPieces.put(9, new Pawn(ChessPiece.COLOR_BLACK, new Position(9)));
+        chessPieces.put(10, new Pawn(ChessPiece.COLOR_BLACK, new Position(10)));
+        chessPieces.put(11, new Pawn(ChessPiece.COLOR_BLACK, new Position(11)));
+        chessPieces.put(12, new Pawn(ChessPiece.COLOR_BLACK, new Position(12)));
+        chessPieces.put(13, new Pawn(ChessPiece.COLOR_BLACK, new Position(13)));
+        chessPieces.put(14, new Pawn(ChessPiece.COLOR_BLACK, new Position(14)));
+        chessPieces.put(15, new Pawn(ChessPiece.COLOR_BLACK, new Position(15)));
+        chessPieces.put(16, new Pawn(ChessPiece.COLOR_BLACK, new Position(16)));
 
-        // black pieces
-        this.chessPieces.add(new Rook(16, 'B', new Position(7, 0)));
-        this.chessPieces.add(new Knight(17, 'B', new Position(7, 1)));
-        this.chessPieces.add(new Bishop(18, 'B', new Position(7, 2)));
-        this.chessPieces.add(new King(19, 'B', new Position(7, 3)));
-        this.chessPieces.add(new Queen(20, 'B', new Position(7, 4)));
-        this.chessPieces.add(new Bishop(21, 'B', new Position(7, 5)));
-        this.chessPieces.add(new Knight(22, 'B', new Position(7, 6)));
-        this.chessPieces.add(new Rook(23, 'B', new Position(7, 7)));
+        // placing the white pieces
+        chessPieces.put(57, new Rook(ChessPiece.COLOR_WHITE, new Position(57)));
+        chessPieces.put(58, new Knight(ChessPiece.COLOR_WHITE, new Position(58)));
+        chessPieces.put(59, new Bishop(ChessPiece.COLOR_WHITE, new Position(59)));
+        chessPieces.put(60, new King(ChessPiece.COLOR_WHITE, new Position(60)));    this.kingPos[0] = 60;
+        chessPieces.put(61, new Queen(ChessPiece.COLOR_WHITE, new Position(61)));
+        chessPieces.put(62, new Bishop(ChessPiece.COLOR_WHITE, new Position(62)));
+        chessPieces.put(63, new Knight(ChessPiece.COLOR_WHITE, new Position(63)));
+        chessPieces.put(64, new Rook(ChessPiece.COLOR_WHITE, new Position(64)));
 
-        this.chessPieces.add(new Pawn(24, 'B', new Position(6, 0)));
-        this.chessPieces.add(new Pawn(25, 'B', new Position(6, 1)));
-        this.chessPieces.add(new Pawn(26, 'B', new Position(6, 2)));
-        this.chessPieces.add(new Pawn(27, 'B', new Position(6, 3)));
-        this.chessPieces.add(new Pawn(28, 'B', new Position(6, 4)));
-        this.chessPieces.add(new Pawn(28, 'B', new Position(6, 5)));
-        this.chessPieces.add(new Pawn(30, 'B', new Position(6, 6)));
-        this.chessPieces.add(new Pawn(31, 'B', new Position(6, 7)));
+        chessPieces.put(49, new Pawn(ChessPiece.COLOR_WHITE, new Position(49)));
+        chessPieces.put(50, new Pawn(ChessPiece.COLOR_WHITE, new Position(50)));
+        chessPieces.put(51, new Pawn(ChessPiece.COLOR_WHITE, new Position(51)));
+        chessPieces.put(52, new Pawn(ChessPiece.COLOR_WHITE, new Position(52)));
+        chessPieces.put(53, new Pawn(ChessPiece.COLOR_WHITE, new Position(53)));
+        chessPieces.put(54, new Pawn(ChessPiece.COLOR_WHITE, new Position(54)));
+        chessPieces.put(55, new Pawn(ChessPiece.COLOR_WHITE, new Position(55)));
+        chessPieces.put(56, new Pawn(ChessPiece.COLOR_WHITE, new Position(56)));
     }
 
-    public char[][] getBoard(){
-        return this.board;
-    }
-
-    public void display(){
-        String col;
-        for (int row = 0; row < 8; row++){
-            col = new String(this.board[row]);
-            System.out.println(col);
-        }
-        System.out.println("");
-        System.out.println("The total # of pieces : " + this.chessPieces.size());
-        for (int i = 0; i < this.chessPieces.size(); i++){
-            System.out.println(this.chessPieces.get(i).repr());
-        }
-    }
-
-    public List<ChessPiece> getChessPices(){
+    public HashMap<Integer, ChessPiece> getChessPieces(){
         return this.chessPieces;
+    }
+    public Player getWhitePlayer(){
+        return this.player1;
+    }
+    public Player getBlackPlayer(){
+        return this.player2;
+    }
+
+    public void update(){
+        Iterator<ChessPiece> iterator = this.chessPieces.values().iterator();
+        while (iterator.hasNext()){
+            iterator.next().updatePossibleMoves(this);
+        }
+    }
+
+    public String repr(){
+        String info = "";
+        info += "{\n player 1 : " + this.player1.repr() + ", \n player 2 : " + this.player2.repr();
+        info += "\n total number of pieces : " + this.chessPieces.size();
+        Iterator<ChessPiece> iterator = this.chessPieces.values().iterator();
+        while (iterator.hasNext()){
+            info += "\n " + iterator.next().repr();
+        }
+        info += "}";
+        return info;
     }
 }

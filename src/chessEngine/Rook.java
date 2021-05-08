@@ -1,9 +1,12 @@
 package chessEngine;
 
-public class Rook extends ChessPiece {
+public class Rook extends ChessPiece{
 
-    public Rook(int id, char pieceColor, Position piecePosition) {
-        super(id, "Rook", pieceColor, piecePosition);
+    boolean moved;
+
+    public Rook(int pieceColor, Position pos) {
+        super(ChessPiece.ROOK | pieceColor, pos);
+
+        this.moved = false;
     }
-    
 }

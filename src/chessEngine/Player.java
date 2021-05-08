@@ -2,9 +2,9 @@ package chessEngine;
 
 public class Player {
     private String name;
-    private char color;
+    private int color;
 
-    public Player(String name, char color){
+    public Player(String name, int color){
         this.name = name;
         this.color = color;
     }
@@ -14,12 +14,20 @@ public class Player {
     }
 
     public char getPlayerColor(){
-        return this.color;
+        char playerColor;
+        if((this.color & ChessPiece.COLOR_WHITE) == ChessPiece.COLOR_WHITE){
+            playerColor = 'W';
+        }else if((this.color & ChessPiece.COLOR_BLACK) == ChessPiece.COLOR_BLACK){
+            playerColor = 'B';
+        }else{
+            playerColor = 'E';
+        }
+        return playerColor;
     }
 
     public String repr(){
         String info = "";
-        info += "{" + "Player name : " + this.name + ", color : " + this.color + "}";
+        info += "{" + "Player name : " + this.name + ", color : " + this.getPlayerColor() + "}";
         return info;
     }
 }
