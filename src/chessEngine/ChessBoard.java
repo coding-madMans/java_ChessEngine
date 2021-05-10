@@ -11,7 +11,7 @@ public class ChessBoard {
     private int state;
 
     public ChessBoard(){
-        this.chessPieces = new HashMap<Integer, ChessPiece>();
+        this.chessPieces = new HashMap<>();
         this.player1 = new Player("player 1", ChessPiece.COLOR_WHITE);
         this.player2 = new Player("Player 2", ChessPiece.COLOR_BLACK);
         this.kingPos = new int[2];
@@ -67,21 +67,24 @@ public class ChessBoard {
     }
 
     public void update(){
-        Iterator<ChessPiece> iterator = this.chessPieces.values().iterator();
-        while (iterator.hasNext()){
-            iterator.next().updatePossibleMoves(this);
+        for (ChessPiece chessPiece : this.chessPieces.values()) {
+            chessPiece.updatePossibleMoves(this);
         }
+        ChessPiece.filterIlLegalMoves(this);
+    }
+
+    public int getKingPos(int index){
+        return this.kingPos[index];
     }
 
     public String repr(){
-        String info = "";
-        info += "{\n player 1 : " + this.player1.repr() + ", \n player 2 : " + this.player2.repr();
-        info += "\n total number of pieces : " + this.chessPieces.size();
-        Iterator<ChessPiece> iterator = this.chessPieces.values().iterator();
-        while (iterator.hasNext()){
-            info += "\n " + iterator.next().repr();
+        StringBuilder info = new StringBuilder();
+        info.append("{\n player 1 : ").append(this.player1.repr()).append(", \n player 2 : ").append(this.player2.repr());
+        info.append("\n total number of pieces : ").append(this.chessPieces.size());
+        for (ChessPiece chessPiece : this.chessPieces.values()) {
+            info.append("\n ").append(chessPiece.repr());
         }
-        info += "}";
-        return info;
+        info.append("}");
+        return info.toString();
     }
 }

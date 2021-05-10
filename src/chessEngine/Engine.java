@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 public class Engine extends JFrame implements Runnable{
 
-    private ChessBoard board;
+    private final ChessBoard board;
 
     public Engine(){
         super("Chess");
@@ -17,7 +17,9 @@ public class Engine extends JFrame implements Runnable{
     public void display(){
         System.out.println(board.repr());
     }
-    public void update(){}
+    public void update(){
+        board.update();
+    }
 
     @Override
     public void run() {

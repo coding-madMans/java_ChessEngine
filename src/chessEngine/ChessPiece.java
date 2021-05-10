@@ -4,10 +4,12 @@ package chessEngine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class ChessPiece {
 
+    // pieceID flags
     protected static final int PAWN = 1;
     protected static final int ROOK = 2;
     protected static final int KNIGHT = 4;
@@ -18,17 +20,30 @@ public abstract class ChessPiece {
     protected static final int COLOR_WHITE = 64;
     protected static final int COLOR_BLACK = 128;
 
+    // piece status flags
+    protected static final int NO_FLAGS = 0;
+    protected static final int BLOCKING_ENEMY_ATTACK = 1;
+    protected static final int COLUMN_LOCKED = 2;
+    protected static final int ROW_LOCKED = 4;
+    protected static final int DIAGONAL_LOCKED = 8;
+    protected static final int NE_BOUND_LOCK = 16;
+    protected static final int ATTACK_MODE = 32;
+    protected static final int BLOCK_MODE = 64;
+    protected static final int KING_ATTACK_MODE = 128;
+
     //                                                {N,  E, S, W,  NE, NW, SE, SW}
     protected static final  int[] MOMENT_DIRECTIONS = {-8, 1, 8, -1, -7, -6,  7, 6};
 
     protected int pieceId;
     protected Position pos;
     protected List<Integer> possibleMoves;
+    protected int pieceStatusFlags;
 
     public ChessPiece(int pieceId, Position pos){
         this.pieceId = pieceId;
         this.pos = pos;
-        this.possibleMoves = new ArrayList<Integer>();
+        this.possibleMoves = new ArrayList<>();
+        this.pieceStatusFlags = NO_FLAGS;
     }
 
     public char getPieceColor(){
@@ -66,9 +81,8 @@ public abstract class ChessPiece {
     public void updatePossibleMoves(ChessBoard board){
         this.possibleMoves.clear();
         String pieceType = this.getPieceType();
-        if((pieceType == "Rook") || (pieceType == "Bishop") || (pieceType == "Queen")){
+        if((pieceType.equals("Rook")) || (pieceType.equals("Bishop")) || (pieceType.equals("Queen"))){
             this.slidingPieceMoves(board);
-            return;
         }
     }
 
@@ -79,10 +93,10 @@ public abstract class ChessPiece {
             endingDirection = 3;
         }else if((this.pieceId & BISHOP) == BISHOP){
             startingDirection = 4;
-            endingDirection = 8;
+            endingDirection = 7;
         }else{
             startingDirection = 0;
-            endingDirection = 8;
+            endingDirection = 7;
         }
         Position tempPos;
         for(int i = startingDirection; i <= endingDirection; i++){
@@ -105,22 +119,64 @@ public abstract class ChessPiece {
         }
     }
 
-    public boolean isEnemy(ChessPiece other){
-        if(this.getPieceColor() != other.getPieceColor()){
-            return false;
+    public static void filterIlLegalMoves(ChessBoard board){
+        for(int i = 0; i < 2; i++){
+            King kingPiece = (King)board.getChessPieces().get(board.getKingPos(i));
+            kingPiece.caslingMove(board);
+            HashMap<String, List<ChessPiece>> pieces = kingPiece.postVerifyTheMoves(board);
+            if(!kingPiece.isCheckMate()){
+                List<ChessPiece> enemyPieces = pieces.get("enemyPieces");
+                for(ChessPiece piece : pieces.get("piecesToModify")){
+                    piece.removeIllegalMoves(enemyPieces);
+                }
+            }
         }
-        return true;
+    }
+
+    public void removeIllegalMoves(List<ChessPiece> enemyPieces){
+        String pieceType = this.getPieceType();
+        if((pieceType.equals("Rook")) || (pieceType.equals("Bishop")) || (pieceType.equals("Queen"))){
+            if((pieceType.equals("Rook")) && ((this.pieceStatusFlags & DIAGONAL_LOCKED) == DIAGONAL_LOCKED)){
+                this.possibleMoves.clear();
+                return;
+            }
+            if((pieceType.equals("Bishop")) && (((this.pieceStatusFlags & COLUMN_LOCKED) == COLUMN_LOCKED) || ((this.pieceStatusFlags & ROW_LOCKED) == ROW_LOCKED))){
+                this.possibleMoves.clear();
+                return;
+            }
+        }
+        List<Integer> legalMoves = new ArrayList<>();
+        if((this.pieceStatusFlags & ATTACK_MODE) == ATTACK_MODE){
+            for(ChessPiece enemyPiece : enemyPieces){
+                if(this.possibleMoves.contains(enemyPiece.pos.getPosition())){
+                    legalMoves.add(enemyPiece.pos.getPosition());
+                }
+            }
+        }
+        if((this.pieceStatusFlags & BLOCK_MODE) == BLOCK_MODE){
+            for(ChessPiece enemyPiece : enemyPieces){
+                for(Integer enemyMove : enemyPiece.possibleMoves){
+                    if(this.possibleMoves.contains(enemyMove)){
+                        legalMoves.add(enemyMove);
+                    }
+                }
+            }
+        }
+        this.possibleMoves.clear();
+        this.possibleMoves = legalMoves;
+    }
+
+    public boolean isEnemy(ChessPiece other){
+        return this.getPieceColor() == other.getPieceColor();
     }
 
     public boolean isKing(){
-        if((this.pieceId & KING) == KING){
-            return true;
-        }
-        return false;
+        return (this.pieceId & KING) == KING;
     }
 
     public void attackReport(@NotNull King king){
-        king.setInAttack();
+        king.setInCheck();
+        this.pieceStatusFlags |= KING_ATTACK_MODE;
     }
 
     public String repr(){

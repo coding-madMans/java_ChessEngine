@@ -16,14 +16,10 @@ public class Position {
     }
 
     public boolean isValid(){
-        if((this.pos >= 1) && (this.pos <= 64)){
-            return true;
-        }
-        return false;
+        return (this.pos >= 1) && (this.pos <= 64);
     }
 
     public Position getPositionToDirection(int direction){
-        Position Pos = new Position(this.pos + direction);
-        return Pos;
+        return new Position(this.pos + direction);
     }
 }
