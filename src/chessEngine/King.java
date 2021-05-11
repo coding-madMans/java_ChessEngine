@@ -14,10 +14,10 @@ public class King extends  ChessPiece{
     private boolean moved;
     private int status;
 
-    public King(int pieceColor, Position pos) {
+    public King(int pieceColor, Position pos, boolean moved) {
         super(ChessPiece.KING | pieceColor, pos);
 
-        this.moved = false;
+        this.moved = moved;
         this.status = NORMAL;
     }
 
@@ -69,7 +69,7 @@ public class King extends  ChessPiece{
                         if(!this.isEnemy(piece)){
                             if((piece.pieceId & ROOK) == ROOK){
                                 Rook rook = (Rook) piece;
-                                if(!rook.moved){
+                                if(!rook.isMoved()){
                                     tempPos = new Position(this.pos.getPosition());
                                     for(int k = 0; k < 2; k++){
                                         tempPos = tempPos.getPositionToDirection(direction);
@@ -203,5 +203,13 @@ public class King extends  ChessPiece{
 
     public boolean isCheckMate(){
         return this.isInCheck() && ((this.status & CHECK_MATE) == CHECK_MATE);
+    }
+
+    public boolean isMoved(){
+        return this.moved;
+    }
+
+    public void setMoved(boolean moved){
+        this.moved = moved;
     }
 }

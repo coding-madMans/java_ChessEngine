@@ -1,8 +1,8 @@
 package chessEngine;
 
 public class Player {
-    private String name;
-    private int color;
+    private final String name;
+    private final int color;
 
     public Player(String name, int color){
         this.name = name;
@@ -13,14 +13,14 @@ public class Player {
         return this.name;
     }
 
-    public char getPlayerColor(){
-        char playerColor;
+    public int getPlayerColor(){
+        int playerColor;
         if((this.color & ChessPiece.COLOR_WHITE) == ChessPiece.COLOR_WHITE){
-            playerColor = 'W';
+            playerColor = ChessPiece.COLOR_WHITE;
         }else if((this.color & ChessPiece.COLOR_BLACK) == ChessPiece.COLOR_BLACK){
-            playerColor = 'B';
+            playerColor = ChessPiece.COLOR_BLACK;
         }else{
-            playerColor = 'E';
+            playerColor = ChessPiece.ERROR;
         }
         return playerColor;
     }

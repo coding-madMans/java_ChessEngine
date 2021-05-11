@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class ChessPiece {
 
     // pieceID flags
+    protected static final int ERROR = 0;
     protected static final int PAWN = 1;
     protected static final int ROOK = 2;
     protected static final int KNIGHT = 4;
@@ -46,42 +47,42 @@ public abstract class ChessPiece {
         this.pieceStatusFlags = NO_FLAGS;
     }
 
-    public char getPieceColor(){
-        char pieceColor;
+    public int getPieceColor(){
+        int pieceColor;
         if((this.pieceId & COLOR_WHITE) == COLOR_WHITE){
-            pieceColor = 'W';
+            pieceColor = COLOR_WHITE;
         }else if((this.pieceId & COLOR_BLACK) == COLOR_BLACK){
-            pieceColor = 'B';
+            pieceColor = COLOR_BLACK;
         }else{
-            pieceColor = 'E';
+            pieceColor = ERROR;
         }
         return pieceColor;
     }
 
-    public String getPieceType(){
-        String pieceType;
+    public int getPieceType(){
+        int pieceType;
         if((this.pieceId & PAWN) == PAWN){
-            pieceType = "Pawn";
+            pieceType = PAWN;
         }else if((this.pieceId & ROOK) == ROOK){
-            pieceType = "Rook";
+            pieceType = ROOK;
         }else if((this.pieceId & KNIGHT) == KNIGHT){
-            pieceType = "Knight";
+            pieceType = KNIGHT;
         }else if((this.pieceId & BISHOP) == BISHOP){
-            pieceType = "Bishop";
+            pieceType = BISHOP;
         }else if((this.pieceId & QUEEN) == QUEEN){
-            pieceType = "Queen";
+            pieceType = QUEEN;
         }else if((this.pieceId & KING) == KING) {
-            pieceType = "King";
+            pieceType = KING;
         }else{
-            pieceType = "Error";
+            pieceType = ERROR;
         }
         return pieceType;
     }
 
     public void updatePossibleMoves(ChessBoard board){
         this.possibleMoves.clear();
-        String pieceType = this.getPieceType();
-        if((pieceType.equals("Rook")) || (pieceType.equals("Bishop")) || (pieceType.equals("Queen"))){
+        int pieceType = this.getPieceType();
+        if((pieceType == ROOK) || (pieceType == BISHOP) || (pieceType == QUEEN)){
             this.slidingPieceMoves(board);
         }
     }
@@ -124,7 +125,7 @@ public abstract class ChessPiece {
             King kingPiece = (King)board.getChessPieces().get(board.getKingPos(i));
             kingPiece.caslingMove(board);
             HashMap<String, List<ChessPiece>> pieces = kingPiece.postVerifyTheMoves(board);
-            if(!kingPiece.isCheckMate()){
+            if((!kingPiece.isCheckMate()) && (pieces != null)){
                 List<ChessPiece> enemyPieces = pieces.get("enemyPieces");
                 for(ChessPiece piece : pieces.get("piecesToModify")){
                     piece.removeIllegalMoves(enemyPieces);
@@ -134,13 +135,13 @@ public abstract class ChessPiece {
     }
 
     public void removeIllegalMoves(List<ChessPiece> enemyPieces){
-        String pieceType = this.getPieceType();
-        if((pieceType.equals("Rook")) || (pieceType.equals("Bishop")) || (pieceType.equals("Queen"))){
-            if((pieceType.equals("Rook")) && ((this.pieceStatusFlags & DIAGONAL_LOCKED) == DIAGONAL_LOCKED)){
+        int pieceType = this.getPieceType();
+        if((pieceType == ROOK) || (pieceType == BISHOP) || (pieceType == QUEEN)){
+            if((pieceType == ROOK) && ((this.pieceStatusFlags & DIAGONAL_LOCKED) == DIAGONAL_LOCKED)){
                 this.possibleMoves.clear();
                 return;
             }
-            if((pieceType.equals("Bishop")) && (((this.pieceStatusFlags & COLUMN_LOCKED) == COLUMN_LOCKED) || ((this.pieceStatusFlags & ROW_LOCKED) == ROW_LOCKED))){
+            if((pieceType == BISHOP) && (((this.pieceStatusFlags & COLUMN_LOCKED) == COLUMN_LOCKED) || ((this.pieceStatusFlags & ROW_LOCKED) == ROW_LOCKED))){
                 this.possibleMoves.clear();
                 return;
             }
@@ -188,4 +189,7 @@ public abstract class ChessPiece {
         return info;
     }
 
+    public Position getPosition() {
+        return new Position(this.pos.getPosition());
+    }
 }

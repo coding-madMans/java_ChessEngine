@@ -2,12 +2,12 @@ package chessEngine;
 
 public class Pawn extends ChessPiece{
 
-    boolean moved;
+    private boolean moved;
 
-    public Pawn( int pieceColor, Position pos) {
+    public Pawn( int pieceColor, Position pos, boolean moved) {
         super(ChessPiece.PAWN | pieceColor, pos);
 
-        this.moved = false;
+        this.moved = moved;
     }
 
     public void updatePossibleMoves(ChessBoard board){
@@ -45,5 +45,13 @@ public class Pawn extends ChessPiece{
                 }
             }
         }
+    }
+
+    public boolean isMoved(){
+        return this.moved;
+    }
+
+    public void updateMoved(boolean moved){
+        this.moved = moved;
     }
 }
