@@ -27,7 +27,12 @@ public class Player {
 
     public String repr(){
         String info = "";
-        info += "{" + "Player name : " + this.name + ", color : " + this.getPlayerColor() + "}";
+        info += "{" + "Player name : " + this.name + ", color : ";
+        if(this.getPlayerColor() == ChessPiece.COLOR_WHITE){
+            info += "White}";
+        }else{
+            info += "Black}";
+        }
         return info;
     }
 }

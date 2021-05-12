@@ -51,7 +51,7 @@ public class Pawn extends ChessPiece{
         return this.moved;
     }
 
-    public void updateMoved(boolean moved){
+    public void setMoved(boolean moved){
         this.moved = moved;
     }
 }

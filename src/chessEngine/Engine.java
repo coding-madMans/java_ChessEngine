@@ -1,17 +1,13 @@
 package chessEngine;
 
-import javax.swing.JFrame;
-
-public class Engine extends JFrame implements Runnable{
+public class Engine{
 
     private final ChessBoard board;
 
-    public Engine(){
-        super("Chess");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 800, 650);
-
-        this.board = new ChessBoard();
+    public Engine(String fen) throws Exception {
+        Player player1 = new Player("player1", ChessPiece.COLOR_WHITE);
+        Player player2 = new Player("player2", ChessPiece.COLOR_BLACK);
+        this.board = new ChessBoard(player1, player2, fen);
     }
 
     public void display(){
@@ -21,8 +17,7 @@ public class Engine extends JFrame implements Runnable{
         board.update();
     }
 
-    @Override
-    public void run() {
-        this.setVisible(true);
+    public ChessBoard getBoard(){
+        return this.board;
     }
 }

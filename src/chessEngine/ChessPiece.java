@@ -180,10 +180,31 @@ public abstract class ChessPiece {
         this.pieceStatusFlags |= KING_ATTACK_MODE;
     }
 
+    public String getType(int type){
+        String pieceType;
+        switch (type){
+            case PAWN -> pieceType = "Pawn";
+            case ROOK -> pieceType = "Rook";
+            case KNIGHT -> pieceType = "Knight";
+            case BISHOP -> pieceType = "Bishop";
+            case QUEEN -> pieceType = "Queen";
+            case KING -> pieceType = "King";
+            default -> pieceType = "Error";
+        }
+        return pieceType;
+    }
+
+    public String getColor(int colorId){
+        if(colorId == COLOR_WHITE){
+            return "White";
+        }
+        return "Black";
+    }
+
     public String repr(){
         String info = "";
-        info += "{ piece type : " + this.getPieceType();
-        info += ", piece color : " + this.getPieceColor();
+        info += "{ piece type : " + this.getType(this.getPieceType());
+        info += ", piece color : " + this.getColor(this.getPieceColor());
         info += ", piece pos : " + this.pos.getPosition();
         info += ", piece id : " + this.pieceId + "}";
         return info;
