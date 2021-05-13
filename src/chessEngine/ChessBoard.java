@@ -21,7 +21,7 @@ public class ChessBoard {
     }
 
     public void readFen(String fen) throws Exception {
-        System.out.println("The given fen : " + fen);
+        // System.out.println("The given fen : " + fen);
         this.chessPieces.clear();
         String[] fenBlocks = fen.split(" ");
         if(fenBlocks.length < 1){

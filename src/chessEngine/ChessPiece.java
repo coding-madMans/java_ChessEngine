@@ -10,30 +10,30 @@ import java.util.List;
 public abstract class ChessPiece {
 
     // pieceID flags
-    protected static final int ERROR = 0;
-    protected static final int PAWN = 1;
-    protected static final int ROOK = 2;
-    protected static final int KNIGHT = 4;
-    protected static final int BISHOP = 8;
-    protected static final int QUEEN = 16;
-    protected static final int KING = 32;
+    public static final int ERROR = 0;
+    public static final int PAWN = 1;
+    public static final int ROOK = 2;
+    public static final int KNIGHT = 4;
+    public static final int BISHOP = 8;
+    public static final int QUEEN = 16;
+    public static final int KING = 32;
 
-    protected static final int COLOR_WHITE = 64;
-    protected static final int COLOR_BLACK = 128;
+    public static final int COLOR_WHITE = 64;
+    public static final int COLOR_BLACK = 128;
 
     // piece status flags
-    protected static final int NO_FLAGS = 0;
-    protected static final int BLOCKING_ENEMY_ATTACK = 1;
-    protected static final int COLUMN_LOCKED = 2;
-    protected static final int ROW_LOCKED = 4;
-    protected static final int DIAGONAL_LOCKED = 8;
-    protected static final int NE_BOUND_LOCK = 16;
-    protected static final int ATTACK_MODE = 32;
-    protected static final int BLOCK_MODE = 64;
-    protected static final int KING_ATTACK_MODE = 128;
+    public static final int NO_FLAGS = 0;
+    public static final int BLOCKING_ENEMY_ATTACK = 1;
+    public static final int COLUMN_LOCKED = 2;
+    public static final int ROW_LOCKED = 4;
+    public static final int DIAGONAL_LOCKED = 8;
+    public static final int NE_BOUND_LOCK = 16;
+    public static final int ATTACK_MODE = 32;
+    public static final int BLOCK_MODE = 64;
+    public static final int KING_ATTACK_MODE = 128;
 
     //                                                {N,  E, S, W,  NE, NW, SE, SW}
-    protected static final  int[] MOMENT_DIRECTIONS = {-8, 1, 8, -1, -7, -6,  7, 6};
+    public static final  int[] MOMENT_DIRECTIONS = {-8, 1, 8, -1, -7, -6,  7, 6};
 
     protected int pieceId;
     protected Position pos;
